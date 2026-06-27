@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>唐山大地震50周年：殇与立的对话</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'dark-bg': '#0d0d0d',
+            'dark-secondary': '#1a1a1a',
+            'dark-tertiary': '#252525',
+            'gold': '#d4a574',
+            'gold-light': '#e8c9a8',
+            'blood-red': '#8b2942',
+            'blood-light': '#a83c5a',
+          },
+          fontFamily: {
+            'serif-cn': ['"Noto Serif SC"', 'serif'],
+            'sans-cn': ['"Noto Sans SC"', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-dark-bg text-gray-200 font-sans-cn overflow-x-hidden">
+  <!-- 进度条 -->
+  <div id="progress-bar" class="fixed top-0 left-0 h-1 bg-gradient-to-r from-blood-red via-gold to-gold-light z-50 w-0 transition-all duration-100"></div>
+
+  <!-- 封面部分 -->
+  <section id="hero" class="relative min-h-screen flex flex-col justify-end overflow-hidden">
+    <div class="absolute inset-0 bg-dark-bg">
+      <div class="absolute inset-0" style="background-image: url('https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=1976%20Tangshan%20earthquake%20ruins%20panoramic%20view%2C%20destroyed%20cityscape%2C%20debris%20and%20collapsed%20buildings%2C%20black%20and%20white%20photography%2C%20historical%20documentary%20style%2C%20dramatic%20sky%2C%20high%20contrast&image_size=landscape_16_9'); background-size: cover; background-position: center; filter: brightness(0.4);"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-dark-bg via-dark-bg/40 to-transparent"></div>
+    </div>
+    
+    <div class="relative z-10 px-6 pb-20 md:pb-32 max-w-5xl mx-auto w-full">
+      <div class="text-center">
+        <div class="opacity-0 animate-fade-in-up" style="animation-delay: 0.3s; animation-fill-mode: forwards;">
+          <span class="text-gold text-lg md:text-xl tracking-[0.5em] font-serif-cn">从毁灭到重生</span>
+        </div>
+        
+        <h1 class="mt-6 font-serif-cn text-3xl md:text-5xl lg:text-6xl font-bold text-white opacity-0 animate-fade-in-up" style="animation-delay: 0.6s; animation-fill-mode: forwards;">
+          唐山大地震50周年
+        </h1>
+        
+        <div class="mt-6 text-gray-400 text-sm md:text-base max-w-xl mx-auto opacity-0 animate-fade-in-up" style="animation-delay: 0.9s; animation-fill-mode: forwards;">
+          <p>旧时代遗留的创伤 新时代发展的难题</p>
+          <p class="mt-1">依旧潜藏在城市肌理中</p>
+        </div>
+        
+        <h2 class="mt-12 font-serif-cn text-2xl md:text-4xl lg:text-5xl font-bold opacity-0 animate-fade-in-up" style="animation-delay: 1.2s; animation-fill-mode: forwards;">
+          <span class="text-blood-light">"殇"</span>
+          <span class="text-gray-300 mx-2">与</span>
+          <span class="text-gold">"立"</span>
+          <span class="text-gray-300">：废墟之上的重生地</span>
+        </h2>
+      </div>
+      
+      <div class="mt-8 flex justify-center opacity-0 animate-fade-in" style="animation-delay: 2s; animation-fill-mode: forwards;">
+        <button onclick="scrollToSection()" class="bg-gray-600/60 hover:bg-gray-500/60 text-white px-10 py-3 rounded-full text-sm font-medium transition-all duration-300 border border-gray-500/50">
+          下滑进入
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 词云部分 -->
+  <section id="wordcloud" class="py-16 md:py-24 relative bg-dark-bg">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="opacity-0 translate-y-8" data-reveal>
+        <div class="mb-6">
+          <h2 class="text-xl md:text-2xl font-serif-cn font-bold text-gray-200">
+            提起唐山大地震，你会想到什么？
+          </h2>
+        </div>
+        
+        <!-- 搜索框 -->
+        <div class="mb-8">
+          <div class="relative max-w-lg">
+            <input type="text" placeholder="唐山大地震" class="w-full bg-dark-secondary border border-dark-tertiary rounded-full py-3 px-6 text-gray-300 placeholder-gray-500 focus:outline-none focus:border-gold/50 transition-colors">
+            <button class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gold transition-colors">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+        
+        <!-- 词云文字渐显效果 -->
+        <div class="relative overflow-hidden rounded-xl border border-dark-tertiary py-12 md:py-16 bg-gradient-to-br from-white/5 to-white/10">
+          <div class="word-cloud-text relative w-full h-80 md:h-96">
+            <span class="word-item word-size-1" style="top: 5%; left: 15%;">奋斗</span>
+            <span class="word-item word-size-2" style="top: 8%; right: 10%;">重生</span>
+            <span class="word-item word-size-3" style="top: 12%; left: 40%;">New Life</span>
+            <span class="word-item word-size-2" style="top: 25%; left: 5%;">废墟</span>
+            <span class="word-item word-size-1" style="top: 20%; right: 30%;">涅槃</span>
+            <span class="word-item word-size-3" style="top: 35%; left: 25%;">希望</span>
+            <span class="word-item word-size-2" style="top: 30%; right: 5%;">Persistence</span>
+            <span class="word-item word-size-3" style="top: 45%; left: 10%;">Together</span>
+            <span class="word-item word-size-2" style="top: 50%; right: 20%;">坚守</span>
+            <span class="word-item word-size-3" style="top: 55%; left: 45%;">梦想</span>
+            <span class="word-item word-size-2" style="top: 65%; left: 5%;">无畏</span>
+            <span class="word-item word-size-3" style="top: 70%; right: 10%;">Healing</span>
+            <span class="word-item word-size-2" style="top: 75%; left: 30%;">伤痕</span>
+            <span class="word-item word-size-3" style="top: 80%; right: 35%;">Rebirth</span>
+            <span class="word-item word-size-2" style="top: 85%; left: 50%;">铭记</span>
+            <span class="word-item word-size-3" style="top: 15%; left: 70%;">死亡</span>
+            <span class="word-item word-size-2" style="top: 60%; right: 50%;">奋斗</span>
+            <span class="word-item word-size-3" style="top: 40%; right: 45%;">立足</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2026年的唐山 -->
+  <section id="modern-tangshan" class="py-24 md:py-32 relative bg-dark-secondary/30">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="opacity-0 translate-y-8" data-reveal>
+        <div class="text-center mb-16">
+          <h2 class="text-3xl md:text-4xl font-serif-cn font-bold text-gray-100 mb-6">
+            那么，先让我们看看<span class="text-gold">2026年的唐山</span>
+          </h2>
+          <div class="w-16 h-0.5 bg-gradient-to-r from-transparent via-gold/50 to-transparent mx-auto"></div>
+        </div>
+        
+        <!-- 2026唐山城市宣传片 -->
+        <div class="relative aspect-video bg-dark-secondary/60 rounded-2xl overflow-hidden mb-12 border border-dark-tertiary">
+          <img src="./images/cover.jpg" alt="2026唐山" class="w-full h-full object-cover">
+        </div>
+        
+        <!-- 总结性文字 -->
+        <div class="text-center mb-12 max-w-3xl mx-auto">
+          <p class="text-gray-200 font-serif-cn text-lg md:text-xl leading-relaxed mb-4">
+            如今<span class="text-gold">山海安然</span> <span class="text-gold">万象更新</span>的唐山
+          </p>
+          <p class="text-gray-300 font-serif-cn text-base md:text-lg leading-relaxed mb-4">
+            所有蓬勃与希望<br>
+            都始于那场破碎后的重生
+          </p>
+          <p class="text-gray-400 font-serif-cn text-base leading-relaxed">
+            时间拨回<span class="text-blood-light">1976年7月28日凌晨3时42分</span><br>
+            一场<span class="text-blood-light">7.8级强震</span>骤然降临
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 第一问：为何破坏力如此之强 -->
+  <section id="why-destructive" class="py-24 md:py-32 relative">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="opacity-0 translate-y-8" data-reveal>
+        <div class="mb-16">
+          <span class="text-6xl md:text-8xl font-serif-cn font-black text-dark-tertiary leading-none">Q1</span>
+          <h2 class="text-3xl md:text-5xl font-serif-cn font-bold text-gray-100 mt-4 mb-4">
+            你知道为何此次地震<span class="text-blood-light">破坏力远超同期震级灾害</span>吗？
+          </h2>
+          <div class="w-24 h-1 bg-gradient-to-r from-blood-red to-transparent"></div>
+        </div>
+        
+        <div class="space-y-8">
+          
+          <!-- 两张废墟图片 -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="relative overflow-hidden rounded-xl border border-dark-tertiary aspect-video">
+              <img src="images/ruin1.png" alt="震后废墟全景" class="ruin-photo">
+              <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+                <p class="text-gray-300 text-sm">震后城市全景 · 1976</p>
+              </div>
+            </div>
+            <div class="relative overflow-hidden rounded-xl border border-dark-tertiary aspect-video">
+              <img src="images/ruin2.png" alt="街道废墟" class="ruin-photo">
+              <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+                <p class="text-gray-300 text-sm">街道废墟 · 1976</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+          <div>
+            <div class="space-y-6">
+              <div class="bg-dark-secondary/60 backdrop-blur-sm border border-dark-tertiary rounded-xl p-6">
+                <div class="flex items-start gap-4">
+                  <div class="w-12 h-12 bg-blood-red/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <span class="text-blood-light font-bold">1</span>
+                  </div>
+                  <div>
+                    <h4 class="text-lg font-serif-cn font-bold text-gray-100 mb-2">深夜凌晨3:42</h4>
+                    <p class="text-gray-400 text-sm">市民正在熟睡，毫无防备，无法及时逃生。</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="bg-dark-secondary/60 backdrop-blur-sm border border-dark-tertiary rounded-xl p-6">
+                <div class="flex items-start gap-4">
+                  <div class="w-12 h-12 bg-blood-red/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <span class="text-blood-light font-bold">2</span>
+                  </div>
+                  <div>
+                    <h4 class="text-lg font-serif-cn font-bold text-gray-100 mb-2">建筑抗震能力差</h4>
+                    <p class="text-gray-400 text-sm">彼时建筑多为砖石结构，缺乏抗震设计，房屋质量参差不齐。</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="bg-dark-secondary/60 backdrop-blur-sm border border-dark-tertiary rounded-xl p-6">
+                <div class="flex items-start gap-4">
+                  <div class="w-12 h-12 bg-blood-red/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <span class="text-blood-light font-bold">3</span>
+                  </div>
+                  <div>
+                    <h4 class="text-lg font-serif-cn font-bold text-gray-100 mb-2">震源深度仅12公里</h4>
+                    <p class="text-gray-400 text-sm">浅源地震，能量衰减少，破坏力集中释放。</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="bg-dark-secondary/60 backdrop-blur-sm border border-dark-tertiary rounded-xl p-6">
+                <div class="flex items-start gap-4">
+                  <div class="w-12 h-12 bg-blood-red/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <span class="text-blood-light font-bold">4</span>
+                  </div>
+                  <div>
+                    <h4 class="text-lg font-serif-cn font-bold text-gray-100 mb-2">人口密度高</h4>
+                    <p class="text-gray-400 text-sm">唐山是工业重镇，人口密集，百万人口城市瞬间被摧毁。</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <div class="bg-dark-secondary/60 backdrop-blur-sm border border-dark-tertiary rounded-2xl p-8">
+              <h4 class="text-lg font-serif-cn text-gray-200 mb-6 text-center">地震关键数据对比</h4>
+              <div id="comparisonChart" style="width: 100%; height: 400px;"></div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 总结性文字 -->
+        <div class="mt-12 text-center max-w-3xl mx-auto">
+          <p class="text-gray-300 font-serif-cn text-base md:text-lg leading-relaxed">
+            唐山地处<span class="text-blood-light">华北强地震断裂带</span><br>
+            <span class="text-blood-light">震源浅</span> 震动持续时间长<br>
+            极震区完全覆盖城市核心生活区
+          </p>
+          <p class="text-gray-400 font-serif-cn text-sm md:text-base leading-relaxed mt-6">
+            先天不稳定的地质条件<br>
+            是灾难发生不可规避的客观诱因<br>
+            也为如今城市防灾建设留下长期挑战
+          </p>
+        </div>
+        
+        <!-- 破坏力原因动态图表 -->
+        <div class="mt-10 max-w-4xl mx-auto">
+          <div style="height: 310px; width: 100%;" class="bg-dark-secondary/60 backdrop-blur-sm border border-blood-red/20 rounded-xl overflow-hidden">
+            <iframe src="https://dycharts.com/xshow/index.html?id=c_a9e5ceb19cfc58463d0d9d87d428f6ce" class="dycharts-frame" scrolling="no"></iframe>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 第二问：唐山发展优势 -->
+  <section id="advantages" class="py-24 md:py-32 relative bg-dark-secondary/30">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="opacity-0 translate-y-8" data-reveal>
+        <div class="mb-16">
+          <span class="text-6xl md:text-8xl font-serif-cn font-black text-dark-tertiary leading-none">Q2</span>
+          <h2 class="text-3xl md:text-5xl font-serif-cn font-bold text-gray-100 mt-4 mb-4">
+            唐山发展的<span class="text-gold">优势</span>何在？
+          </h2>
+          <div class="w-24 h-1 bg-gradient-to-r from-gold to-transparent"></div>
+        </div>
+        
+        <!-- 优势一：经济发展迅速 -->
+        <div class="mb-16">
+          <div class="flex items-center gap-4 mb-6">
+            <div class="w-12 h-12 bg-gold/10 rounded-xl flex items-center justify-center">
+              <svg class="w-6 h-6 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-xl font-serif-cn font-bold text-gray-100">经济发展迅速</h3>
+              <p class="text-gray-400 text-sm">历经半个世纪建设，唐山彻底走出灾后经济崩塌困境，经济规模实现数百倍增长。</p>
+            </div>
+          </div>
+          
+          <!-- 三个动态图表 -->
+          <div class="space-y-6">
+            <div style="height: 260px; width: 100%;" class="bg-dark-secondary/60 backdrop-blur-sm border border-gold/20 rounded-xl overflow-hidden">
+              <iframe src="https://dycharts.com/xshow/index.html?id=c_d5ad77191556c2f7b17f6ca4724da422" class="dycharts-frame" scrolling="no"></iframe>
+            </div>
+            <div style="height: 260px; width: 100%;" class="bg-dark-secondary/60 backdrop-blur-sm border border-gold/20 rounded-xl overflow-hidden">
+              <iframe src="https://dycharts.com/xshow/index.html?id=c_d883adec15b3001819071f90a30eac96" class="dycharts-frame" scrolling="no"></iframe>
+            </div>
+            <div style="height: 260px; width: 100%;" class="bg-dark-secondary/60 backdrop-blur-sm border border-gold/20 rounded-xl overflow-hidden">
+              <iframe src="https://dycharts.com/xshow/index.html?id=c_0ec6c9b9061aa71e28b8017e88bffa00" class="dycharts-frame" scrolling="no"></iframe>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 优势二：民生恢复 -->
+        <div class="mb-16">
+          <div class="flex items-center gap-4 mb-6">
+            <div class="w-12 h-12 bg-gold/10 rounded-xl flex items-center justify-center">
+              <svg class="w-6 h-6 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-xl font-serif-cn font-bold text-gray-100">民生恢复</h3>
+              <p class="text-gray-400 text-sm">民生是重建的核心，50年间唐山完成人口回流、居住环境改造，居民生活质量大幅提高。</p>
+            </div>
+          </div>
+          
+          <!-- 四个动态图表 -->
+          <div class="space-y-4">
+            <div style="height: 220px; width: 100%;" class="bg-dark-secondary/60 backdrop-blur-sm border border-gold/20 rounded-xl overflow-hidden">
+              <iframe src="https://dycharts.com/xshow/index.html?id=c_c3d5e8da3d6e413856d3ddf38cf16d4b" class="dycharts-frame" scrolling="no"></iframe>
+            </div>
+            <div style="height: 220px; width: 100%;" class="bg-dark-secondary/60 backdrop-blur-sm border border-gold/20 rounded-xl overflow-hidden">
+              <iframe src="https://dycharts.com/xshow/index.html?id=c_ef4d3404e8f62d0a326f90965c836edc" class="dycharts-frame" scrolling="no"></iframe>
+            </div>
+            <div style="height: 220px; width: 100%;" class="bg-dark-secondary/60 backdrop-blur-sm border border-gold/20 rounded-xl overflow-hidden">
+              <iframe src="https://dycharts.com/xshow/index.html?id=c_76687b1b6b26be69855cd9201442442a" class="dycharts-frame" scrolling="no"></iframe>
+            </div>
+            <div style="height: 220px; width: 100%;" class="bg-dark-secondary/60 backdrop-blur-sm border border-gold/20 rounded-xl overflow-hidden">
+              <iframe src="https://dycharts.com/xshow/index.html?id=c_82ba1876dcc36046e7851e9f444f1265" class="dycharts-frame" scrolling="no"></iframe>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 优势三：抗震工作建设 -->
+        <div class="mb-8">
+          <div class="flex items-center gap-4 mb-6">
+            <div class="w-12 h-12 bg-blood-red/10 rounded-xl flex items-center justify-center">
+              <svg class="w-6 h-6 text-blood-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-xl font-serif-cn font-bold text-gray-100">抗震工作建设</h3>
+            </div>
+          </div>
+          
+          <!-- 问答形式描述 -->
+          <div class="bg-dark-secondary/60 backdrop-blur-sm border border-blood-red/30 rounded-2xl p-6 md:p-8">
+            <div class="mb-6">
+              <div class="flex items-start gap-3 mb-4">
+                <span class="text-blood-light font-bold text-lg">Q</span>
+                <p class="text-gray-300 font-serif-cn">唐山是一座多地震的城市，我们想了解唐山地震监测预警能力如何？在国内处于什么水平?</p>
+              </div>
+            </div>
+            <div class="border-t border-dark-tertiary pt-6">
+              <div class="flex items-start gap-3">
+                <span class="text-gold font-bold text-lg">A</span>
+                <div>
+                  <p class="text-gray-400 font-serif-cn leading-relaxed mb-4">
+                    唐山市地震监测工作是建设最早、较为完善的一个工作体系。经过近50年的建设和发展，地震监测方式已由单一化人工模拟观测逐步向数字化、网络化、智能化发展，目前已构建了覆盖全市的地震监测预警体系。
+                  </p>
+                  <p class="text-gray-500 text-sm">
+                    —— 市应急管理局震害防御科 李洋
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 抗震工作两个动态图表 -->
+          <div class="mt-6 space-y-6">
+            <div style="height: 260px; width: 100%;" class="bg-dark-secondary/60 backdrop-blur-sm border border-blood-red/20 rounded-xl overflow-hidden">
+              <iframe src="https://dycharts.com/xshow/index.html?id=c_183c2c877a4190ec380caf97046d8b7f" class="dycharts-frame" scrolling="no"></iframe>
+            </div>
+            <div style="height: 260px; width: 100%;" class="bg-dark-secondary/60 backdrop-blur-sm border border-blood-red/20 rounded-xl overflow-hidden">
+              <iframe src="https://dycharts.com/xshow/index.html?id=c_bb443cf301a0725b52dbcde1f28a49b9" class="dycharts-frame" scrolling="no"></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 第三问：发展短板 -->
+  <section id="weaknesses" class="py-24 md:py-32 relative">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="opacity-0 translate-y-8" data-reveal>
+        <div class="mb-16">
+          <span class="text-6xl md:text-8xl font-serif-cn font-black text-dark-tertiary leading-none">Q3</span>
+          <h2 class="text-3xl md:text-5xl font-serif-cn font-bold text-gray-100 mt-4 mb-4">
+            唐山发展的<span class="text-blood-light">短板</span>是？
+          </h2>
+          <div class="w-24 h-1 bg-gradient-to-r from-blood-red to-transparent"></div>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="bg-dark-secondary/60 backdrop-blur-sm border border-blood-red/30 rounded-2xl p-8">
+            <div class="w-16 h-16 bg-blood-red/10 rounded-2xl flex items-center justify-center mb-6">
+              <svg class="w-8 h-8 text-blood-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+              </svg>
+            </div>
+            <h4 class="text-xl font-serif-cn font-bold text-gray-100 mb-4">先天地理条件</h4>
+            <ul class="text-gray-400 space-y-3 text-sm">
+              <li class="flex items-start gap-2">
+                <span class="text-blood-light mt-1">•</span>
+                <span>地处华北地震带郯庐断裂带</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-blood-light mt-1">•</span>
+                <span>地震断裂带交叉分布</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-blood-light mt-1">•</span>
+                <span>城市防灾建设需长期投入</span>
+              </li>
+            </ul>
+          </div>
+          
+          <div class="bg-dark-secondary/60 backdrop-blur-sm border border-blood-red/30 rounded-2xl p-8">
+            <div class="w-16 h-16 bg-blood-red/10 rounded-2xl flex items-center justify-center mb-6">
+              <svg class="w-8 h-8 text-blood-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+              </svg>
+            </div>
+            <h4 class="text-xl font-serif-cn font-bold text-gray-100 mb-4">城区规划问题</h4>
+            <ul class="text-gray-400 space-y-3 text-sm">
+              <li class="flex items-start gap-2">
+                <span class="text-blood-light mt-1">•</span>
+                <span>震后重建缺乏统一规划</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-blood-light mt-1">•</span>
+                <span>城市空间布局碎片化严重</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-blood-light mt-1">•</span>
+                <span>社会遗留问题较多</span>
+              </li>
+            </ul>
+          </div>
+          
+          <div class="bg-dark-secondary/60 backdrop-blur-sm border border-blood-red/30 rounded-2xl p-8">
+            <div class="w-16 h-16 bg-blood-red/10 rounded-2xl flex items-center justify-center mb-6">
+              <svg class="w-8 h-8 text-blood-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+              </svg>
+            </div>
+            <h4 class="text-xl font-serif-cn font-bold text-gray-100 mb-4">产业发展惯性</h4>
+            <ul class="text-gray-400 space-y-3 text-sm">
+              <li class="flex items-start gap-2">
+                <span class="text-blood-light mt-1">•</span>
+                <span>百年资源型城市发展模式固化</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-blood-light mt-1">•</span>
+                <span>传统重工业占比高</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-blood-light mt-1">•</span>
+                <span>新兴产业培育竞争力不足</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        
+        <!-- 活动断层数据中心链接 -->
+        <div class="mt-8 text-center">
+          <a href="https://www.activefault-datacenter.cn/faultzone/faultzone.html" target="_blank" class="inline-flex items-center gap-2 text-blood-light hover:text-blood-light/80 text-sm transition-colors border-b border-blood-light/30 hover:border-blood-light/60 pb-1">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+            </svg>
+            唐山地区活动断层分布图 - 国家地震活动断层数据中心
+          </a>
+        </div>
+        <div class="mt-4 text-center">
+          <a href="https://www.activefault-datacenter.cn/faultzone/faultzone.html" target="_blank" class="text-gray-500 text-xs hover:text-gold transition-colors">https://www.activefault-datacenter.cn/faultzone/faultzone.html</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 第四问：为何发展迅速 -->
+  <section id="why-rapid" class="py-24 md:py-32 relative bg-dark-secondary/30">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="opacity-0 translate-y-8" data-reveal>
+        <div class="mb-16">
+          <span class="text-6xl md:text-8xl font-serif-cn font-black text-dark-tertiary leading-none">Q4</span>
+          <h2 class="text-3xl md:text-5xl font-serif-cn font-bold text-gray-100 mt-4 mb-4">
+            唐山发展<span class="text-gold">如此迅速</span>的原因是？
+          </h2>
+          <div class="w-24 h-1 bg-gradient-to-r from-gold to-transparent"></div>
+        </div>
+        
+        <!-- 原因一：国家政府支持 -->
+        <div class="mb-12">
+          <div class="flex items-center gap-4 mb-6">
+            <div class="w-12 h-12 bg-gold/10 rounded-xl flex items-center justify-center">
+              <svg class="w-6 h-6 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-xl font-serif-cn font-bold text-gray-100">国家政府支持</h3>
+              <p class="text-gray-400 text-sm">国家自上而下的政策资金扶持，区域共同发展，京津冀产业承接持续投入。</p>
+            </div>
+          </div>
+          
+          <!-- 图表 -->
+          <div class="bg-dark-secondary/60 backdrop-blur-sm border border-gold/20 rounded-2xl p-6">
+            <h4 class="text-lg font-serif-cn text-gray-200 mb-4">京津冀产业承接投入</h4>
+            <div class="w-full h-[350px] rounded-xl overflow-hidden">
+              <iframe src="https://dycharts.com/xshow/index.html?id=c_a1bac5988a046185847bccfacaf4964e" class="dycharts-frame" scrolling="no"></iframe>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 原因二：自然资源基地 -->
+        <div class="mb-12">
+          <div class="flex items-center gap-4 mb-6">
+            <div class="w-12 h-12 bg-gold/10 rounded-xl flex items-center justify-center">
+              <svg class="w-6 h-6 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-xl font-serif-cn font-bold text-gray-100">自然资源基底</h3>
+              <p class="text-gray-400 text-sm">本地得天独厚的矿产工业基底，为城市重建奠定坚实经济基础。</p>
+            </div>
+          </div>
+          
+          <!-- 自然资源视频 -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="relative aspect-video bg-dark-secondary/60 rounded-2xl overflow-hidden border border-gold/20">
+              <img src="images/resource1.jpg" alt="自然资源1" class="w-full h-full object-cover">
+            </div>
+            <div class="relative aspect-video bg-dark-secondary/60 rounded-2xl overflow-hidden border border-gold/20">
+              <img src="./images/resource2.jpg" alt="自然资源2" class="w-full h-full object-cover">
+            </div>
+          </div>
+        </div>
+        
+        <!-- 原因三：唐山抗震精神 -->
+        <div class="mb-12">
+          <div class="flex items-center gap-4 mb-6">
+            <div class="w-12 h-12 bg-blood-red/10 rounded-xl flex items-center justify-center">
+              <svg class="w-6 h-6 text-blood-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-xl font-serif-cn font-bold text-gray-100">唐山抗震精神</h3>
+              <p class="text-gray-400 text-sm">全民众志成城的重建精神，城市建设的内核动力。</p>
+            </div>
+          </div>
+          
+          <!-- 两个抗震精神视频 -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="relative aspect-video bg-dark-secondary/60 rounded-2xl overflow-hidden border border-blood-red/20">
+              <img src="images/spirit1.jpg" alt="抗震精神" class="w-full h-full object-cover">
+            </div>
+            <div class="relative aspect-video bg-dark-secondary/60 rounded-2xl overflow-hidden border border-blood-red/20">
+              <img src="images/spirit2.jpg" alt="抗震精神2" class="w-full h-full object-cover">
+            </div>
+          </div>
+        </div>
+        
+        <!-- 总结性文字 -->
+        <div class="bg-dark-secondary/40 backdrop-blur-sm border border-gold/30 rounded-2xl p-8 text-center">
+          <p class="text-gray-200 font-serif-cn text-lg md:text-xl leading-relaxed">
+            唐山能够实现<span class="text-gold">远超同类城市</span>的重建速度<br>
+            是<span class="text-gold">多重利好叠加</span>的结果
+          </p>
+          <p class="text-gray-300 font-serif-cn text-base mt-6">
+            上述三者共同造就了这座城市的<span class="text-gold">重生奇迹</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 第五问：短板原因 -->
+  <section id="why-weaknesses" class="py-24 md:py-32 relative">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="opacity-0 translate-y-8" data-reveal>
+        <div class="mb-16">
+          <span class="text-6xl md:text-8xl font-serif-cn font-black text-dark-tertiary leading-none">Q5</span>
+          <h2 class="text-3xl md:text-5xl font-serif-cn font-bold text-gray-100 mt-4 mb-4">
+            发展短板<span class="text-blood-light">存在的原因</span>是？
+          </h2>
+          <div class="w-24 h-1 bg-gradient-to-r from-blood-red to-transparent"></div>
+        </div>
+        
+        <div class="space-y-8">
+          <div class="bg-dark-secondary/60 backdrop-blur-sm border border-dark-tertiary rounded-2xl p-8">
+            <div class="flex items-start gap-6">
+              <div class="w-16 h-16 bg-blood-red/10 rounded-2xl flex items-center justify-center flex-shrink-0">
+                <span class="text-blood-light text-2xl font-bold">1</span>
+              </div>
+              <div>
+                <h4 class="text-xl font-serif-cn font-bold text-gray-100 mb-3">历史遗留：快速重建的代价</h4>
+                <p class="text-gray-400 leading-relaxed">
+                  震后重建追求速度，城市规划被压缩，基础设施标准降低。"先有房住，再求好房"的理念导致城市功能布局不合理，缺乏长远规划。
+                </p>
+              </div>
+            </div>
+            <!-- 历史遗留动态图 -->
+            <div class="mt-6" style="height: 260px; width: 100%;">
+              <iframe src="https://dycharts.com/xshow/index.html?id=c_c37b8eb9eb0a248a2d22b203dcd2de55" class="dycharts-frame" scrolling="no"></iframe>
+            </div>
+          </div>
+          
+          <div class="bg-dark-secondary/60 backdrop-blur-sm border border-dark-tertiary rounded-2xl p-8">
+            <div class="flex items-start gap-6">
+              <div class="w-16 h-16 bg-blood-red/10 rounded-2xl flex items-center justify-center flex-shrink-0">
+                <span class="text-blood-light text-2xl font-bold">2</span>
+              </div>
+              <div>
+                <h4 class="text-xl font-serif-cn font-bold text-gray-100 mb-3">路径依赖：资源型城市的困境</h4>
+                <p class="text-gray-400 leading-relaxed">
+                  百年煤矿开采形成的产业格局难以撼动，钢铁、煤炭等传统产业提供了大量就业，也绑定了城市的经济结构。转型意味着短期利益牺牲，阻力巨大。
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="bg-dark-secondary/60 backdrop-blur-sm border border-dark-tertiary rounded-2xl p-8">
+            <div class="flex items-start gap-6">
+              <div class="w-16 h-16 bg-blood-red/10 rounded-2xl flex items-center justify-center flex-shrink-0">
+                <span class="text-blood-light text-2xl font-bold">3</span>
+              </div>
+              <div>
+                <h4 class="text-xl font-serif-cn font-bold text-gray-100 mb-3">区位劣势：地震风险的成本</h4>
+                <p class="text-gray-400 leading-relaxed">
+                  地处华北地震带，地震风险是城市发展的隐性成本。防震减灾投入持续增加，影响了其他领域的资源配置。
+                </p>
+              </div>
+            </div>
+            <!-- 区位劣势图片 -->
+            <div class="mt-6">
+              <img src="./images/location.png" alt="区位劣势" class="w-full rounded-xl">
+            </div>
+          </div>
+        </div>
+        
+        <!-- 产业结构动态图表 -->
+        <div class="mt-12 max-w-4xl mx-auto">
+          <div style="height: 310px; width: 100%;" class="bg-dark-secondary/60 backdrop-blur-sm border border-dark-tertiary rounded-xl overflow-hidden">
+            <iframe src="https://dycharts.com/xshow/index.html?id=c_0f02e6163119a674f46d9eec4fa3d350" class="dycharts-frame" scrolling="no"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 第六问：未来发展 -->
+  <section id="future" class="py-24 md:py-32 relative bg-dark-secondary/30">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="opacity-0 translate-y-8" data-reveal>
+        <div class="mb-16">
+          <span class="text-6xl md:text-8xl font-serif-cn font-black text-dark-tertiary leading-none">Q6</span>
+          <h2 class="text-3xl md:text-5xl font-serif-cn font-bold text-gray-100 mt-4 mb-4">
+            <span class="text-gold">未来</span>如何发展？
+          </h2>
+          <div class="w-24 h-1 bg-gradient-to-r from-gold to-transparent"></div>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-dark-secondary/60 backdrop-blur-sm border border-gold/30 rounded-2xl p-8 hover:border-gold/60 transition-all duration-300">
+            <div class="flex items-start gap-6">
+              <div class="w-14 h-14 bg-gold/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                <svg class="w-7 h-7 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+              </div>
+              <div>
+                <h4 class="text-xl font-serif-cn font-bold text-gold mb-3">产业转型</h4>
+                <p class="text-gray-400 text-sm leading-relaxed">
+                  设定年度落后产能压减指标，加大高新、文旅产业招商引资，降低重工业依赖。
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="bg-dark-secondary/60 backdrop-blur-sm border border-gold/30 rounded-2xl p-8 hover:border-gold/60 transition-all duration-300">
+            <div class="flex items-start gap-6">
+              <div class="w-14 h-14 bg-gold/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                <svg class="w-7 h-7 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                </svg>
+              </div>
+              <div>
+                <h4 class="text-xl font-serif-cn font-bold text-gold mb-3">防灾韧性升级</h4>
+                <p class="text-gray-400 text-sm leading-relaxed">
+                  逐年推进老旧小区、乡村房屋抗震改造，四级预警网络全域覆盖，常态化全民防灾科普演练。
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="bg-dark-secondary/60 backdrop-blur-sm border border-gold/30 rounded-2xl p-8 hover:border-gold/60 transition-all duration-300">
+            <div class="flex items-start gap-6">
+              <div class="w-14 h-14 bg-gold/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                <svg class="w-7 h-7 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+              </div>
+              <div>
+                <h4 class="text-xl font-serif-cn font-bold text-gold mb-3">人文民生兜底</h4>
+                <p class="text-gray-400 text-sm leading-relaxed">
+                  完善伤残、老年幸存者专项补贴，增设社区心理干预站点，深挖抗震文旅IP。
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="bg-dark-secondary/60 backdrop-blur-sm border border-gold/30 rounded-2xl p-8 hover:border-gold/60 transition-all duration-300">
+            <div class="flex items-start gap-6">
+              <div class="w-14 h-14 bg-gold/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                <svg class="w-7 h-7 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                </svg>
+              </div>
+              <div>
+                <h4 class="text-xl font-serif-cn font-bold text-gold mb-3">人口发展优化</h4>
+                <p class="text-gray-400 text-sm leading-relaxed">
+                  出台青年落户、就业安居扶持政策，均衡新老城区公共资源配套，留住年轻劳动力。
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 结语 -->
+  <section id="conclusion" class="py-24 md:py-32 relative">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <div class="opacity-0 translate-y-8" data-reveal>
+        <div class="space-y-6 mb-16">
+          <p class="text-2xl md:text-3xl font-serif-cn text-gold leading-relaxed">
+            废墟之上的重生从来不是终点
+          </p>
+          <p class="text-xl md:text-2xl text-gray-300 leading-relaxed">
+            持续破解发展短板
+          </p>
+          <p class="text-xl md:text-2xl text-gray-300 leading-relaxed">
+            筑牢城市韧性
+          </p>
+          <p class="text-2xl md:text-3xl font-serif-cn text-gold-light leading-relaxed">
+            才是唐山永续生长的长久答案
+          </p>
+        </div>
+        
+        <div class="w-32 h-px bg-gradient-to-r from-transparent via-gold/50 to-transparent mx-auto mb-16"></div>
+        
+        <div class="text-left">
+          <h3 class="text-lg font-serif-cn text-gray-400 mb-6 text-center">数据来源</h3>
+          <div class="space-y-4 max-w-2xl mx-auto">
+            <div class="bg-dark-secondary/40 border border-dark-tertiary rounded-xl p-4">
+              <div class="text-gray-300 mb-1">国家地震科学数据共享中心</div>
+              <a href="https://data.earthquake.cn" target="_blank" class="text-gray-500 text-xs hover:text-gold transition-colors">https://data.earthquake.cn</a>
+            </div>
+            <div class="bg-dark-secondary/40 border border-dark-tertiary rounded-xl p-4">
+              <div class="text-gray-300 mb-1">中国地震局官网唐山50周年防灾专题</div>
+              <a href="https://www.cea.gov.cn" target="_blank" class="text-gray-500 text-xs hover:text-gold transition-colors">https://www.cea.gov.cn</a>
+            </div>
+            <div class="bg-dark-secondary/40 border border-dark-tertiary rounded-xl p-4">
+              <div class="text-gray-300 mb-1">环渤海新闻网唐山本地产业城市发展档案</div>
+              <a href="https://www.huanbohainews.com.cn/" target="_blank" class="text-gray-500 text-xs hover:text-gold transition-colors">https://www.huanbohainews.com.cn/</a>
+            </div>
+            <div class="bg-dark-secondary/40 border border-dark-tertiary rounded-xl p-4">
+              <div class="text-gray-300 mb-1">唐山市人民政府官网</div>
+              <a href="http://www.tangshan.gov.cn/" target="_blank" class="text-gray-500 text-xs hover:text-gold transition-colors">http://www.tangshan.gov.cn/</a>
+            </div>
+            <div class="bg-dark-secondary/40 border border-dark-tertiary rounded-xl p-4">
+              <div class="text-gray-300 mb-1">唐山市应急管理局公开公示数据</div>
+              <a href="https://yjglj.tangshan.gov.cn/anjianju/index.html" target="_blank" class="text-gray-500 text-xs hover:text-gold transition-colors">https://yjglj.tangshan.gov.cn/anjianju/index.html</a>
+            </div>
+            <div class="bg-dark-secondary/40 border border-dark-tertiary rounded-xl p-4">
+              <div class="text-gray-300 mb-1">唐山市文化广电和旅游局</div>
+              <a href="https://whgdhlyj.tangshan.gov.cn/" target="_blank" class="text-gray-500 text-xs hover:text-gold transition-colors">https://whgdhlyj.tangshan.gov.cn/</a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-20 text-gray-600 text-sm">
+          <p>唐山大地震50周年 · 数据新闻</p>
+          <p class="mt-2">1976 — 2026</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="main.js"></script>
+</body>
+</html>

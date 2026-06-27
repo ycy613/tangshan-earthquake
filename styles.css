@@ -1,0 +1,509 @@
+/* 全局样式 */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Noto Sans SC', sans-serif;
+  background-color: #0d0d0d;
+  color: #d1d5db;
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0d0d0d;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* 动画关键帧 */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes bounceSlow {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(10px);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(212, 165, 116, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(212, 165, 116, 0.4);
+  }
+}
+
+/* 动画类 */
+.animate-fade-in-up {
+  animation: fadeInUp 1s ease-out forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 1s ease-out forwards;
+}
+
+.animate-fade-in-left {
+  animation: fadeInLeft 0.8s ease-out forwards;
+}
+
+.animate-fade-in-right {
+  animation: fadeInRight 0.8s ease-out forwards;
+}
+
+.animate-bounce-slow {
+  animation: bounceSlow 2s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+/* 滚动显示动画初始状态 */
+[data-reveal] {
+  opacity: 0;
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-reveal].revealed {
+  opacity: 1;
+  transform: translate(0, 0) !important;
+}
+
+/* 章节分隔线效果 */
+.section-divider {
+  position: relative;
+}
+
+/* 文字渐变效果 */
+.text-gradient-gold {
+  background: linear-gradient(135deg, #d4a574, #e8c9a8, #d4a574);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* 背景纹理叠加 */
+.bg-grain::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+/* 卡片悬停效果 */
+.card-hover {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+}
+
+/* 图片暗色滤镜 */
+.img-darken {
+  filter: brightness(0.7) contrast(1.1);
+  transition: filter 0.3s ease;
+}
+
+.img-darken:hover {
+  filter: brightness(0.85) contrast(1.05);
+}
+
+/* 时间线样式 */
+.timeline-line {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, transparent, #333 10%, #333 90%, transparent);
+  transform: translateX(-50%);
+}
+
+/* 数据数字样式 */
+.count-number {
+  font-variant-numeric: tabular-nums;
+}
+
+/* 响应式优化 */
+@media (max-width: 768px) {
+  .timeline-line {
+    left: 1rem;
+  }
+}
+
+/* 选中文字样式 */
+::selection {
+  background: rgba(212, 165, 116, 0.3);
+  color: #fff;
+}
+
+/* 平滑滚动容器 */
+.smooth-scroll-container {
+  scroll-behavior: smooth;
+}
+
+/* 图表容器 */
+.chart-container {
+  width: 100%;
+  min-height: 300px;
+}
+
+/* 词云图片动态效果 */
+.word-cloud-img {
+  animation: wordCloudZoom 6s ease-in-out infinite alternate;
+  filter: contrast(1.1) saturate(1.1);
+}
+
+@keyframes wordCloudZoom {
+  0% {
+    transform: scale(1);
+    filter: contrast(1.1) saturate(1.1) brightness(1);
+  }
+  50% {
+    transform: scale(1.03);
+    filter: contrast(1.15) saturate(1.2) brightness(1.05);
+  }
+  100% {
+    transform: scale(1.06);
+    filter: contrast(1.1) saturate(1.1) brightness(1);
+  }
+}
+
+/* 词云文字渐显效果 */
+.word-cloud-text {
+  position: relative;
+}
+
+.word-item {
+  position: absolute;
+  font-family: 'Noto Serif SC', serif;
+  font-weight: bold;
+  opacity: 0;
+  animation: wordFadeIn 1.5s ease-out forwards;
+}
+
+.word-size-1 {
+  font-size: 3rem;
+}
+
+.word-size-2 {
+  font-size: 2rem;
+}
+
+.word-size-3 {
+  font-size: 1.25rem;
+}
+
+.word-item:nth-child(1) { animation-delay: 0.2s; color: #dc2626; }
+.word-item:nth-child(2) { animation-delay: 0.4s; color: #eab308; }
+.word-item:nth-child(3) { animation-delay: 0.6s; color: #4ade80; }
+.word-item:nth-child(4) { animation-delay: 0.8s; color: #8b2942; }
+.word-item:nth-child(5) { animation-delay: 1s; color: #d4a574; }
+.word-item:nth-child(6) { animation-delay: 1.2s; color: #eab308; }
+.word-item:nth-child(7) { animation-delay: 1.4s; color: #60a5fa; }
+.word-item:nth-child(8) { animation-delay: 1.6s; color: #fbbf24; }
+.word-item:nth-child(9) { animation-delay: 1.8s; color: #d4a574; }
+.word-item:nth-child(10) { animation-delay: 2s; color: #f87171; }
+.word-item:nth-child(11) { animation-delay: 2.2s; color: #eab308; }
+.word-item:nth-child(12) { animation-delay: 2.4s; color: #4ade80; }
+.word-item:nth-child(13) { animation-delay: 2.6s; color: #8b2942; }
+.word-item:nth-child(14) { animation-delay: 2.8s; color: #fbbf24; }
+.word-item:nth-child(15) { animation-delay: 3s; color: #d4a574; }
+.word-item:nth-child(16) { animation-delay: 3.2s; color: #dc2626; }
+.word-item:nth-child(17) { animation-delay: 3.4s; color: #eab308; }
+.word-item:nth-child(18) { animation-delay: 3.6s; color: #60a5fa; }
+
+@keyframes wordFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 768px) {
+  .word-size-1 { font-size: 2rem; }
+  .word-size-2 { font-size: 1.5rem; }
+  .word-size-3 { font-size: 1rem; }
+}
+
+/* dycharts iframe 样式 */
+.dycharts-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  display: block;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
+/* iframe 容器响应式 */
+.dycharts-container {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 0.75rem;
+}
+
+/* 桌面端高度 */
+.dycharts-container.h-310 { height: 310px; }
+.dycharts-container.h-260 { height: 260px; }
+.dycharts-container.h-220 { height: 220px; }
+.dycharts-container.h-350 { height: 350px; }
+.dycharts-container.h-400 { height: 400px; }
+
+/* 平板端高度 */
+@media (max-width: 768px) {
+  .dycharts-container.h-310 { height: 220px; }
+  .dycharts-container.h-260 { height: 200px; }
+  .dycharts-container.h-220 { height: 180px; }
+  .dycharts-container.h-350 { height: 240px; }
+  .dycharts-container.h-400 { height: 280px; }
+}
+
+/* 移动端高度 */
+@media (max-width: 480px) {
+  .dycharts-container.h-310 { height: 180px; }
+  .dycharts-container.h-260 { height: 160px; }
+  .dycharts-container.h-220 { height: 150px; }
+  .dycharts-container.h-350 { height: 200px; }
+  .dycharts-container.h-400 { height: 240px; }
+}
+
+/* 图表容器 - 去掉白边撑满 */
+.dycharts-frame + * {
+  margin-top: 0;
+}
+
+/* 废墟图片样式 */
+.ruin-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(30%) brightness(0.9);
+  transition: all 0.5s ease;
+}
+
+.ruin-photo:hover {
+  filter: grayscale(0%) brightness(1);
+  transform: scale(1.02);
+}
+
+/* 地质图样式 */
+.geology-map {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  filter: brightness(0.95);
+  transition: filter 0.3s ease;
+}
+
+.geology-map:hover {
+  filter: brightness(1.05);
+}
+
+/* ========== 移动端响应式优化 ========== */
+
+/* 小屏幕通用优化 */
+@media (max-width: 768px) {
+  /* 图表容器高度自适应 */
+  [style*="height: 310px"] {
+    height: 220px !important;
+  }
+  
+  [style*="height: 260px"] {
+    height: 200px !important;
+  }
+  
+  [style*="height: 220px"] {
+    height: 180px !important;
+  }
+  
+  [style*="height: 350px"] {
+    height: 240px !important;
+  }
+  
+  [style*="height: 400px"] {
+    height: 280px !important;
+  }
+  
+  /* 间距收缩 */
+  .section-divider {
+    margin: 1rem 0;
+  }
+  
+  /* 卡片padding优化 */
+  .bg-dark-secondary\/60 {
+    padding: 0.75rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  [style*="height: 310px"] {
+    height: 180px !important;
+  }
+  
+  [style*="height: 260px"] {
+    height: 160px !important;
+  }
+  
+  [style*="height: 220px"] {
+    height: 150px !important;
+  }
+  
+  [style*="height: 350px"] {
+    height: 200px !important;
+  }
+  
+  [style*="height: 400px"] {
+    height: 240px !important;
+  }
+}
+
+/* ========== iOS/Safari 兼容性修复 ========== */
+
+/* Safari 滚动条隐藏 */
+@media not all and (min-resolution:.001dpcm) { 
+  @supports (-webkit-appearance:none) {
+    ::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+      display: none;
+    }
+    
+    body {
+      -webkit-overflow-scrolling: touch;
+    }
+  }
+}
+
+/* iOS 视口高度问题修复 */
+.ios-safe-area {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* iOS 点击高亮去除 */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* iOS 文本大小调整禁止 */
+body {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* iOS iframe 渲染问题 */
+iframe {
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
+/* ========== 触摸友好交互优化 ========== */
+
+/* 按钮最小点击区域 */
+button, a {
+  min-height: 44px;
+  min-width: 44px;
+  touch-action: manipulation;
+}
+
+/* 触摸反馈 */
+.touch-feedback {
+  transition: all 0.15s ease;
+}
+
+.touch-feedback:active {
+  transform: scale(0.96);
+}
+
+/* 焦点样式优化 */
+button:focus, a:focus {
+  outline: none;
+}
+
+button:focus-visible, a:focus-visible {
+  outline: 2px solid #d4a574;
+  outline-offset: 2px;
+}
+
+/* ========== 高性能动画优化 ========== */
+
+/* GPU加速 */
+.accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* will-change 优化 */
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-opacity {
+  will-change: opacity;
+}
